@@ -86,7 +86,7 @@ def libc_rand_next_states(known_states_in_order, num_states):
    A wrapper around lcg_next_states with hardcoded
    a, c, and m parameters.
    '''
-   return lcg_next_states(known_states_in_order, num_of_states, a=1103515245, c=12345, m=2**31)
+   return lcg_next_states(known_states_in_order, num_states, a=1103515245, c=12345, m=2**31)
 
 def libc_rand_prev_states(known_states_in_order, num_states):
    '''
@@ -94,7 +94,7 @@ def libc_rand_prev_states(known_states_in_order, num_states):
    a, c, and m parameters corresponding to libc rand(),
    used in C and Perl 
    '''
-   return lcg_prev_states(known_states_in_order, num_of_states, a=1103515245, c=12345, m=2**31)
+   return lcg_prev_states(known_states_in_order, num_states, a=1103515245, c=12345, m=2**31)
 
 
 
@@ -521,7 +521,7 @@ def cbc_edit(old_plaintext,new_plaintext,old_ciphertext):
       to the old_plaintext.
    '''
    if not (len(old_plaintext) == len(new_plaintext) == len(old_ciphertext)):
-      raise InputLengthException
+      raise Exception('Invalid input length')
 
    edits = sxor(old_plaintext,new_plaintext)
    return sxor(old_ciphertext,edits)
@@ -1145,6 +1145,12 @@ def break_many_time_pad(ciphertexts, pt_freq_table=frequency.frequency_tables['s
    return final_result
 
 
+def product(items):
+   if len(items) == 0:
+      return 1
+   while len(items) > 1:
+      items = [reduce(operator.mul, items[i * 2:(i + 1) * 2], 1) for i in range((len(items) + 1) / 2)]
+   return items[0]
 
 # TODO: write a batch GCD function
 def batch_gcd(items):
